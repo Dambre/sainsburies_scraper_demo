@@ -44,6 +44,7 @@ class GroceriesSiteTest(unittest.TestCase):
         product = '<div class="productText">\nTest\n</div>'
         description = 'Test'
         self.assertEqual(description, self.gs._get_description(product))
+        self.assertEqual('', self.gs._get_description(''))
 
     def test_get_product_url_method(self):
         url = 'test.test.test'
@@ -79,6 +80,8 @@ class GroceriesSiteTest(unittest.TestCase):
             m.get('http://test.com', text=mock_response)
             m.get('http://test.com/product', text=product_mock_response)
             self.assertEqual(self.gs.scrape(), response_json)
+            m.get('http://test.com', status_code=404)
+            self.assertEqual(self.gs.scrape(), json.dumps({}))
 
 if __name__ == '__main__':
     unittest.main()
